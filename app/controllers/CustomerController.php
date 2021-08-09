@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Requests\Request;
+use Views\View;
+use App\Models\Customer;
 
 class CustomerController extends Controller {
     public function __construct() {
@@ -15,7 +17,12 @@ class CustomerController extends Controller {
      */
     public function index(Request $request)
     {
-        print_r($request->all());
+        $data = $request->all();
+
+        $customer = new Customer;
+        $customers = $customer->filter($data)->get();
+
+        return new View('customers', compact('customers'));
     }
 
     /**
