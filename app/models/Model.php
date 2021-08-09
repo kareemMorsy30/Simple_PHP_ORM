@@ -8,9 +8,10 @@ use App\Database\DatabaseAdapterFactory;
 use App\Database\SqliteDatabase;
 
 class Model implements ModelInterface {
-    protected $table = 'customer';
+    protected $table;
     private $database_adapter;
     protected $models = [];
+    protected $appends = [];
 
     function __construct()
     {
@@ -40,15 +41,17 @@ class Model implements ModelInterface {
     }
 
     function get() {
-        $records = $this->database_adapter->execute();
+        $records = $this->database_adapter->execute($this->table);
 
         foreach ($records as $record) {
+            $model = new static;
             foreach ($record as $field => $value) {
-                $model = new static;
                 $model->{$field} = $value;
-                $this->models[] = $model;
             }
-
+            foreach ($this->appends as $append) {
+                $model->{$append} = $model->{'get'.ucfirst($append).'Attribute'}();
+            }
+            $this->models[] = $model;
         }
 
         return $this->models;
