@@ -131,7 +131,13 @@ class SqliteDatabase implements DatabaseInterface {
      * Execute query
      * @return array
      */
-    function execute() {
+    function execute($table = null) {
+        $query_statement = "SELECT * FROM `$table`";
+
+        if (empty($this->query->getQueryString())) {
+            $this->query->init($query_statement);
+        }
+        
         $result = $this->pdo->query($this->query->getQueryString());
         $this->query->resetQuery();
 
@@ -147,26 +153,6 @@ class SqliteDatabase implements DatabaseInterface {
      * @return array
      */
     function fetchFields($table){
-        // $result = $this->pdo->query("PRAGMA table_info($table);");
-
-        // $table = $result->fetchAll();
-        // print_r($table);
-        //     die();
-
-        // $fields = array_keys($result->fetch(\PDO::FETCH_ASSOC));
-        // return $fields;
-
-        // if ($result) {
-        //     for ($i = 0; $i < $result->columnCount(); $i++) {
-        //         $col = $result->getColumnMeta($i);
-        //         $fields[] = $col['name'];
-        //     }
-        // } else {
-        //     throw new \PDOException('Query syntax is wrong.');
-        // }
-        
-        // return $fields;
-
         $result = $this->pdo->query('SELECT * FROM pragma_table_info("'.$table.'")');
 
         if ($result) {
