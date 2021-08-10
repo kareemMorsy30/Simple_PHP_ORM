@@ -53,6 +53,14 @@ class SqliteDatabase implements DatabaseInterface {
         return $this->pdo;
     }
 
+    function prepareSelect($table) {
+        $query_statement = "SELECT * FROM `$table`";
+
+        if (empty($this->query->getQueryString())) {
+            $this->query->init($query_statement);
+        }
+    }
+
     /**
      * @param string $table
      * @param array $columns
@@ -107,13 +115,23 @@ class SqliteDatabase implements DatabaseInterface {
      */
     function where($table, $condition)
     {
-        $query_statement = "SELECT * FROM `$table`";
-
-        if (empty($this->query->getQueryString())) {
-            $this->query->init($query_statement);
-        }
+        $this->prepareSelect($table);
 
         $this->query->where($condition);
+
+        return $this;
+    }
+
+    /**
+     * @param string $table
+     * @param array $condition
+     * @return mixed
+     */
+    function orWhere($table, $condition)
+    {
+        $this->prepareSelect($table);
+
+        $this->query->orWhere($condition);
 
         return $this;
     }
@@ -132,12 +150,8 @@ class SqliteDatabase implements DatabaseInterface {
      * @return array
      */
     function execute($table = null) {
-        $query_statement = "SELECT * FROM `$table`";
+        $this->prepareSelect($table);
 
-        if (empty($this->query->getQueryString())) {
-            $this->query->init($query_statement);
-        }
-        
         $result = $this->pdo->query($this->query->getQueryString());
         $this->query->resetQuery();
 
@@ -146,6 +160,16 @@ class SqliteDatabase implements DatabaseInterface {
         } else {
             throw new \PDOException('Query syntax is wrong.');
         }
+    }
+
+    /**
+     * Paginate data using query builder class methods limit and offset
+     * @return array
+     */
+    function paginate($table, $limit, $offset) {
+        $this->prepareSelect($table);
+
+        $this->query->limit($limit)->offset($offset);
     }
 
     /**
