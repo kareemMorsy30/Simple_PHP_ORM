@@ -6,15 +6,18 @@ use App\Models\ModelInterface;
 use Config\DatabaseConfig;
 use App\Database\DatabaseAdapterFactory;
 use App\Database\SqliteDatabase;
+use App\Requests\Request;
 
 class Model implements ModelInterface {
     protected $table;
     private $database_adapter;
     protected $models = [];
     protected $appends = [];
+    private $request;
 
     function __construct()
     {
+        $this->request = new Request();
         $database_adapter = new DatabaseAdapterFactory();
         $this->database_adapter = $database_adapter->adapter();
         $this->loadClassAttributes();
@@ -55,6 +58,18 @@ class Model implements ModelInterface {
         }
 
         return $this->models;
+    }
+
+    function paginate($items = 10) {
+        $page = 1;
+
+        if (isset($this->request->page) && is_numeric($this->request->page)) {
+            $page = $this->request->page;
+        }
+
+        $offset = ($page * $items) - $items;
+        $this->database_adapter->paginate($this->table, $items, $offset);
+        return $this->get();
     }
 
     /**
