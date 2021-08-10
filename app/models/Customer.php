@@ -14,14 +14,6 @@ class Customer extends Model {
         'state'
     ];
 
-    private const COUNTRY_REGEX_MAPPER = [
-        'Cameroon' => 'Cameroon',
-        'Ethiopia' => 'Ethiopia',
-        'Morocco' => 'Morocco',
-        'Mozambique' => 'Mozambique',
-        'Uganda' => 'Uganda',
-    ];
-
     protected function getCountryCodeAttribute() {
         if ($this->phone) {
             return '+'.Helper::getCountryCodeOfPhone($this->phone);
@@ -61,6 +53,17 @@ class Customer extends Model {
     public function filter($data) {
         if (isset($data['country']) && $data['country']) {
             $this->where('phone', 'LIKE', '%('.$data['country'].')%');
+        }
+        if (isset($data['valid'])) {
+            if ($data['valid'] == 'valid') {
+                foreach(Helper::getCodes() as $code) {
+                    $this->orWhere('phone', 'REGEXP', $code['regex']);
+                }
+            } else if ($data['valid'] == 'invalid') {
+                foreach(Helper::getCodes() as $code) {
+                    $this->Where('phone', 'NOT REGEXP', $code['regex']);
+                }
+            }
         }
 
         return $this;
