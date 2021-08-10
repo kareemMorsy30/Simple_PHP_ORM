@@ -34,6 +34,28 @@ class QueryBuilder {
         return $this;
     }
 
+    public function orWhere($condition) {
+        $condition[0] = '`'.$condition[0].'`';
+
+        if (count($condition) === 2) {
+            $condition = array($condition[0], '=', "'$condition[1]'");
+        } else if(count($condition) === 3) {
+            $condition[2] = "'$condition[2]'";
+        }
+
+        $condition_string = implode(" ", $condition);
+        
+
+        if (!$this->condition_applied) {
+            $this->query .= " WHERE $condition_string";
+            $this->condition_applied = true;
+        } else {
+            $this->query .= " OR $condition_string";
+        }
+
+        return $this;
+    }
+
     public function orderBy($column, $order = 'ASC') {
         if (!$this->order_applied) {
             $this->query .= " ORDER BY `$column` $order";
