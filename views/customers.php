@@ -9,18 +9,18 @@
 </head>
 <body>
     <div class="container">
-        <h2>Phone numbers <span class="badge badge-warning">Jumia</span></h2>
+        <h2><span class="badge badge-warning">Jumia</span> Phone numbers</h2>
         <form id="filter-form" method="GET" action="<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <label for="select-country">Country</label>
                     <select class="form-control" name="country" id="select-country">
                         <option selected disabled>Select country</option>
-                        <option value="237">Cameroon</option>
-                        <option value="251">Ethiopia</option>
-                        <option value="212">Morocco</option>
-                        <option value="258">Mozambique</option>
-                        <option value="256">Uganda</option>
+                        <option value="237" <?php echo isset($_GET['country']) && $_GET['country'] == 237 ? 'selected' : '' ?>>Cameroon</option>
+                        <option value="251" <?php echo isset($_GET['country']) && $_GET['country'] == 251 ? 'selected' : '' ?>>Ethiopia</option>
+                        <option value="212" <?php echo isset($_GET['country']) && $_GET['country'] == 212 ? 'selected' : '' ?>>Morocco</option>
+                        <option value="258" <?php echo isset($_GET['country']) && $_GET['country'] == 258 ? 'selected' : '' ?>>Mozambique</option>
+                        <option value="256" <?php echo isset($_GET['country']) && $_GET['country'] == 256 ? 'selected' : '' ?>>Uganda</option>
                     </select>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -49,9 +49,9 @@
                     foreach ($customers as $index => $customer) {
                 ?>
                 <tr>
-                    <th scope="row"><?php echo $index + 1; ?></th>
+                    <th scope="row"><?php echo($customer->id + 1); ?></th>
                     <td><?php echo($customer->country); ?></td>
-                    <td><?php echo('Ok'); ?></td>
+                    <td><?php echo($customer->state); ?></td>
                     <td><?php echo($customer->countryCode); ?></td>
                     <td><?php echo($customer->phoneNum); ?></td>
                 </tr>
@@ -60,6 +60,18 @@
                 ?>
             </tbody>
         </table>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-5">
+            </div>
+            <div class="col-5">
+            </div>
+            <div class="col-2">
+            <a href="<?php echo $previous_page_link; ?>" type="button" class="btn btn-primary <?php echo $current_page == 1 ? 'disabled' : ''; ?>">Previous</a>
+                <a href="<?php echo $next_page_link; ?>" type="button" class="btn btn-primary">Next</a>
+            </div>
+        </div>
     </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
