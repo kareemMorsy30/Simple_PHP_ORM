@@ -43,6 +43,17 @@ class Model implements ModelInterface {
         return $this;
     }
 
+        /**
+     * @return object
+     */
+    function orWhere($condition)
+    {
+        $condition_params = func_get_args();
+        $this->database_adapter->orWhere($this->table, $condition_params);
+
+        return $this;
+    }
+
     function get() {
         $records = $this->database_adapter->execute($this->table);
 
