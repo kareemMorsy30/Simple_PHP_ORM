@@ -20,7 +20,7 @@ class CustomerController extends Controller {
         $data = $request->all();
 
         $customer = new Customer;
-        $customers = $customer->filter($data)->get();
+        $customers = $customer->filter($data)->paginate();
 
         return new View('customers', compact('customers'));
     }
