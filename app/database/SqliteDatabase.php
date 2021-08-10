@@ -29,6 +29,12 @@ class SqliteDatabase implements DatabaseInterface {
         $this->database = DatabaseConfig::PATH_TO_SQLITE_FILE;
         $this->query = new QueryBuilder();
         $this->connect();
+        $this->pdo->sqliteCreateFunction('regexp', function ($pattern, $string) {
+            if(preg_match('/'.$pattern.'/', $string)) {
+                return true;
+            }
+            return false;
+        }, 2);
     }
 
     /**
