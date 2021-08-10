@@ -8,6 +8,7 @@ class Request {
         foreach($_REQUEST as $key => $value) {
             $this->{$key} = $value;
         }
+        parse_str($_SERVER['QUERY_STRING'], $this->query_params);
     }
 
     public function all() {
