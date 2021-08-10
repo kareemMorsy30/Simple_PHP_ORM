@@ -15,7 +15,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <label for="select-country">Country</label>
                     <select class="form-control" name="country" id="select-country">
-                        <option selected disabled>Select country</option>
+                        <option value="" selected>All countries</option>
                         <option value="237" <?php echo isset($_GET['country']) && $_GET['country'] == 237 ? 'selected' : '' ?>>Cameroon</option>
                         <option value="251" <?php echo isset($_GET['country']) && $_GET['country'] == 251 ? 'selected' : '' ?>>Ethiopia</option>
                         <option value="212" <?php echo isset($_GET['country']) && $_GET['country'] == 212 ? 'selected' : '' ?>>Morocco</option>
@@ -25,9 +25,10 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <label for="validate-numbers">Valid phone numbers</label>
-                    <select class="form-control" id="validate-numbers">
-                        <option>Valid</option>
-                        <option>Invalid</option>
+                    <select class="form-control" name="valid" id="validate-numbers">
+                        <option value="" selected>All phone numbers</option>
+                        <option value="valid" <?php echo isset($_GET['valid']) && $_GET['valid'] == 'valid' ? 'selected' : '' ?>>Valid</option>
+                        <option value="invalid" <?php echo isset($_GET['valid']) && $_GET['valid'] == 'invalid' ? 'selected' : '' ?>>Invalid</option>
                     </select>
                 </div>
             </div>
@@ -79,6 +80,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script>
         $('#select-country').change(function() {
+            $('#filter-form').submit();
+        });
+        $('#validate-numbers').change(function() {
             $('#filter-form').submit();
         });
     </script>
