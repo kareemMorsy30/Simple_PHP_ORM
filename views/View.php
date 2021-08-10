@@ -22,11 +22,15 @@ class View
                 }
 
                 $request = new Request();
-                $page = isset($request->page) ? $request->page : 1;
+                $page = isset($request->page) ? (int)$request->page : 1;
                 $next_page = $page + 1;
                 $previous_page = $page == 1 ? 1 : $page - 1;
-                $next_page_link = "http://$_SERVER[HTTP_HOST]".strtok($_SERVER['REQUEST_URI'], '?')."?page=".$next_page;
-                $previous_page_link = "http://$_SERVER[HTTP_HOST]".strtok($_SERVER['REQUEST_URI'], '?')."?page=".$previous_page;
+                
+                $params = $request->query_params;
+                $params['page'] = $next_page;
+                $next_page_link = "http://$_SERVER[HTTP_HOST]".strtok($_SERVER['REQUEST_URI'], '?')."?".http_build_query($params);
+                $params['page'] = $previous_page;
+                $previous_page_link = "http://$_SERVER[HTTP_HOST]".strtok($_SERVER['REQUEST_URI'], '?')."?".http_build_query($params);
                 $this->data['current_page'] = $page;
                 $this->data['next_page_link'] = $next_page_link;
                 $this->data['previous_page_link'] = $previous_page_link;
