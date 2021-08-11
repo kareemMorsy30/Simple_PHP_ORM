@@ -6,6 +6,7 @@ use Config\DatabaseConfig;
 
 /**
  * MySQLi database operations
+ * This class is added as an example for other database adapters but it is not ready for actual use
  */
 class MysqliDatabase implements DatabaseInterface {
     /**
@@ -33,6 +34,7 @@ class MysqliDatabase implements DatabaseInterface {
      * Set database configuration using database configuration class
      */
     protected function __construct() {
+        // Set class attributes required to connect to the MySQL database based on Database configuration class const attributes
         $this->host = DatabaseConfig::HOST;
         $this->username = DatabaseConfig::USERNAME;
         $this->password = DatabaseConfig::PASSWORD;
@@ -45,8 +47,12 @@ class MysqliDatabase implements DatabaseInterface {
      * @return \PDO
      */
     public function connect() {
+        /**
+         * Only try to connect if the pdo attribute is null which means that the database is disconnected
+         */ 
         if ($this->pdo == null) {
             try {
+                // Use class attributes initialized in the class constructor to connect to the database
                 $this->pdo = new \PDO("mysql:host=$this->host;dbname=$this->database_name", $this->username, $this->password);
                 // set the PDO error mode to exception
                 $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -106,7 +112,7 @@ class MysqliDatabase implements DatabaseInterface {
      */
     function where($table, $condition)
     {
-        
+
     }
 
     /**
